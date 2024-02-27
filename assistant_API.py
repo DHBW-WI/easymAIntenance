@@ -6,6 +6,7 @@ import streamlit as st
 from openai import OpenAI
 
 from update_user import add_user
+from new_user import create_user
 
 #######################################
 # PREREQUISITES
@@ -54,8 +55,14 @@ def get_remote_instructions(ip, user, start, ende):
     print(add_user(ip, user))
     return "Success"
 
+def add_remote_instructions(ip, user, start, ende, email):
+    print(ip, user, start, ende, email)
+    print(create_user(user, email, ende, ip))
+    return "Success"
+
 tool_to_function = {
-    "get_remote_instructions": get_remote_instructions
+    "get_remote_instructions": get_remote_instructions,
+    "add_remote_instructions": add_remote_instructions
 }
 
 #######################################
@@ -162,14 +169,12 @@ with st.sidebar:
 #######################################
 
 st.title("⚙️ easy mAIntenance ⚙️")
-left_col, right_col = st.columns(2)
 
-with left_col:
-    with st.container():
-        for role, message in st.session_state[conversation_state]:
-            with st.chat_message(role):
-                st.write(message)
-    status_placeholder = st.empty()
+with st.container():
+    for role, message in reversed(st.session_state[conversation_state]):
+        with st.chat_message(role):
+            st.write(message)
+status_placeholder = st.empty()
 
 
     
