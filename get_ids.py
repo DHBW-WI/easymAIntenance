@@ -25,6 +25,13 @@ def get_gid(name):
         if i["name"] == name:
             return(i["id"])
 
+def check_u(name):
+    data = json.loads(requests.request("GET", url_u, headers=headers, data=payload).text)
+    for i in data["data"]:
+        if i["userName"] == name:
+            return True
+    return False
+        
 
 #print(get_uid("lukas_richter"))
 #print(get_gid("remote_maintenance"))

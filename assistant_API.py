@@ -1,5 +1,6 @@
 import json
 import time
+import datetime as dt
 
 import streamlit as st
 
@@ -7,6 +8,8 @@ from openai import OpenAI
 
 from update_user import add_user
 from new_user import create_user
+from get_ids import check_u
+#from time_manager import schedule_job
 
 #######################################
 # PREREQUISITES
@@ -52,17 +55,28 @@ if last_openai_run_state not in st.session_state:
 
 def get_remote_instructions(ip, user, start, ende):
     print(ip, user, start, ende)
-    print(add_user(ip, user))
-    return "Success"
+    #print(add_user(ip, user))
+    #schedule_job(start, ende, user)
+    return str(add_user(ip, user))
 
 def add_remote_instructions(ip, user, start, ende, email):
     print(ip, user, start, ende, email)
     print(create_user(user, email, ende, ip))
     return "Success"
 
+def get_date():
+    print(dt.datetime.now())
+    now = dt.datetime.now()
+    return json.dumps(now.isoformat())
+    
+def check_user(user):
+    return check_u(user)
+
 tool_to_function = {
     "get_remote_instructions": get_remote_instructions,
-    "add_remote_instructions": add_remote_instructions
+    "add_remote_instructions": add_remote_instructions,
+    "get_date": get_date,
+    "check_user": check_user
 }
 
 #######################################
@@ -168,7 +182,7 @@ with st.sidebar:
 # MAIN
 #######################################
 
-st.title("⚙️ easy mAIntenance ⚙️")
+st.title("⚙️ easy mAIntenance")
 
 with st.container():
     for role, message in reversed(st.session_state[conversation_state]):
