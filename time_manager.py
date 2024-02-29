@@ -25,4 +25,4 @@ def schedule_job(start, end, name):
 #schedule_job("2024-02-16T15:42:00", "2024-02-16T15:46:30", "lukas_richter")
 
     
-print(stauth.Hasher(['Admin']).generate())
+#print(stauth.Hasher(['Admin']).generate())

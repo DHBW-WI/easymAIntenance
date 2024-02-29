@@ -1,7 +1,7 @@
 import requests
 import json
 import streamlit as st
-import os
+
 
 
 url_u = "https://admin-api.axissecurity.com/api/v1.0/Users?pageNumber=1&pageSize=150"
