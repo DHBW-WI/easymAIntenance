@@ -2,6 +2,7 @@ from time import sleep
 from apscheduler.schedulers.blocking import *
 import datetime as dt
 from update_user import add_user, revoke_user
+import streamlit_authenticator as stauth
 
 scheduler = BlockingScheduler()
 
@@ -24,4 +25,4 @@ def schedule_job(start, end, name):
 #schedule_job("2024-02-16T15:42:00", "2024-02-16T15:46:30", "lukas_richter")
 
     
-print(dt.datetime.now())
+print(stauth.Hasher(['Admin']).generate())

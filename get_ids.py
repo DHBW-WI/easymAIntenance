@@ -1,5 +1,6 @@
 import requests
 import json
+import streamlit as st
 import os
 
 
@@ -9,7 +10,7 @@ url_g = "https://admin-api.axissecurity.com/api/v1.0/Groups?pageNumber=1&pageSiz
 payload = {}
 headers = {
   'Accept': 'application/json',
-  'Authorization': os.environ['AXIS_API_KEY'],
+  'Authorization': st.secrets["AXIS_API_KEY"],
   'Cookie': 'ax_session=1707811322.554.309.540450|59363e5f178f0b48e5dedc718c7f3b3e'
 }
 
@@ -33,5 +34,5 @@ def check_u(name):
     return False
         
 
-#print(get_uid("lukas_richter"))
-#print(get_gid("remote_maintenance"))
+print(get_uid("lukas_richter"))
+print(get_gid("remote_maintenance"))

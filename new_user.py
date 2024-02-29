@@ -1,6 +1,6 @@
 import requests
 import json
-import os
+import streamlit as st
 from get_ids import get_gid 
 
 url = "https://admin-api.axissecurity.com/api/v1.0/Users"
@@ -8,7 +8,7 @@ url = "https://admin-api.axissecurity.com/api/v1.0/Users"
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'Authorization': os.environ['AXIS_API_KEY'],
+  'Authorization': st.secrets["AXIS_API_KEY"],
   'Cookie': 'ax_session=1707811322.554.309.540450|59363e5f178f0b48e5dedc718c7f3b3e'
 }
 
