@@ -1,6 +1,7 @@
 import json
 import time
 import datetime as dt
+import threading
 
 import streamlit as st
 import streamlit_authenticator as stauth
@@ -12,6 +13,9 @@ from openai import OpenAI
 from update_user import add_user
 from new_user import create_user
 from get_ids import check_u
+from get_ids import get_m
+from time_manager import schedule_job
+from time_manager import get_j
 
 
 #######################################
@@ -63,9 +67,9 @@ elif st.session_state["authentication_status"]:
 
     user_msg_input_key = "input_user_msg"
 
-    #######################################
-    # SESSION STATE SETUP
-    #######################################
+        #######################################
+        # SESSION STATE SETUP
+        #######################################
 
     if (assistant_state not in st.session_state) or (thread_state not in st.session_state):
         st.session_state[assistant_state] = client.beta.assistants.retrieve(assistant_id)
@@ -78,38 +82,47 @@ elif st.session_state["authentication_status"]:
         st.session_state[last_openai_run_state] = None
 
 
-    #######################################
-    # TOOLS SETUP
-    #######################################
+        #######################################
+        # TOOLS AUFRUFE
+        #######################################
 
-    def get_remote_instructions(ip, user, start, ende):
+    def get_remote_instructions(ip, user, start, ende):         # Funktionsaufuruf um die Berechtigungen in Axis einzurichter (bestehender Nutzer)
         print(ip, user, start, ende)
-        #print(add_user(ip, user))
-        #schedule_job(start, ende, user)
-        return str(add_user(ip, user))
+        threading.Thread(target=schedule_job, args=(start, ende, user, ip)).start()
+        return "Success"
+        
 
-    def add_remote_instructions(ip, user, start, ende, email):
+    def add_remote_instructions(ip, user, start, ende, email):          # Funktionsaufuruf um die Berechtigungen in Axis einzurichter (neuer Nutzer)
         print(ip, user, start, ende, email)
         print(create_user(user, email, ende, ip))
         return "Success"
 
-    def get_date():
+    def get_date():         # Funktionsaufruf um das aktuelle Datum und die Zeit für GPT bereitzustellen
         print(dt.datetime.now())
         now = dt.datetime.now()
         return json.dumps(now.isoformat())
         
-    def check_user(user):
+    def check_user(user):       # Funktionsaufruf, um Existenz eines Nutzers zu prüfen
         return check_u(user)
 
-    tool_to_function = {
+    def get_machines():         # Funktionsaufruf, um Liste der vorhandenen Maschinen zu bekommen
+        return get_m()
+
+    def get_jobs():             # Funktionsaufruf, um Liste der gerade eingerichteten Fernwartungen zu bekommen (funktioniert noch nicht)
+        return get_j()
+
+
+    tool_to_function = {        # "Festlegen" der Funktionsnamen für GPT
         "get_remote_instructions": get_remote_instructions,
         "add_remote_instructions": add_remote_instructions,
         "get_date": get_date,
-        "check_user": check_user
+        "check_user": check_user,
+        "get_machines": get_machines,
+        "get_jobs": get_jobs
     }
 
     #######################################
-    # HELPERS
+    # HELFER
     #######################################
 
 

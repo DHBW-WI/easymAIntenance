@@ -1,28 +1,30 @@
 from time import sleep
-from apscheduler.schedulers.blocking import *
-import datetime as dt
+from datetime import datetime, timedelta
+from apscheduler.schedulers.background import BackgroundScheduler
 from update_user import add_user, revoke_user
-import streamlit_authenticator as stauth
-
-scheduler = BlockingScheduler()
 
 
-def add(name):
-    print(add_user("remote_maintenance", str(name)))
+scheduler = BackgroundScheduler()
+scheduler.start()
 
+def get_j():
+    scheduler.print_jobs()
+    return str(scheduler.get_jobs(jobstore=any))
+
+def add(name, ip):
+    print(add_user(str(ip), str(name)))
+ 
 def revoke(name):
     print(revoke_user(str(name)))
-    scheduler.shutdown()
-
-def schedule_job(start, end, name):
-    scheduler.start()
-    scheduler.add_job(add, 'date', run_date=start, args=[name])
+    
+def schedule_job(start, end, name, ip):
+    start_o = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
+    if start_o < datetime.now():                                                                # Verhindert das Nutzen einer zurückliegenden Startzeit
+        start = (datetime.now()+ timedelta(seconds=10)).strftime("%Y-%m-%dT%H:%M:%S")           # Startzeit wird in dem Fall immer auf den aktuellen Zeitpunkt gesetzt 
+    scheduler.add_job(add, 'date', run_date=start, args=[name, ip])
     scheduler.add_job(revoke, 'date', run_date=end, args=[name])
     print("Success: ", start, end, name)
     return "Success"
-    
 
-#schedule_job("2024-02-16T15:42:00", "2024-02-16T15:46:30", "lukas_richter")
 
-    
-#print(stauth.Hasher(['Admin']).generate())
+

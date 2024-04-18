@@ -29,4 +29,4 @@ def create_user(username, email, ende, gid):
     print(requests.request("POST", url, headers=headers, data=payload))
     return requests.request("POST", url="https://admin-api.axissecurity.com/api/v1.0/Commit", headers=headers, data={})
 
-#print(create_user("", "", "Maintenance", "User").json())
+
