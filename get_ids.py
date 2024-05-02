@@ -5,8 +5,8 @@ import streamlit as st
 
 
 
-url_u = "https://admin-api.axissecurity.com/api/v1.0/Users?pageNumber=1&pageSize=150"
-url_g = "https://admin-api.axissecurity.com/api/v1.0/Groups?pageNumber=1&pageSize=150"
+url_u = "https://admin-api.axissecurity.com/api/v1.0/Users?pageNumber=1&pageSize=150"           # API Endpunkt für Nutzerdaten
+url_g = "https://admin-api.axissecurity.com/api/v1.0/Groups?pageNumber=1&pageSize=150"          # API Endpunkt für Nutzergruppendaten
 
 payload = {}
 headers = {
@@ -41,8 +41,4 @@ def get_m():                                                                    
         if "maschine" in i["name"]:
             list = list + ("Name: " + i["name"] + "; Beschreibung: " + i["description"] +"| " )
     return list
-
-#print(get_uid("lukas_richter"))
-#print(get_gid("remote_maintenance"))
-#print(get_m())
 

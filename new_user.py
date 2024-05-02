@@ -12,9 +12,9 @@ headers = {
   'Cookie': 'ax_session=1707811322.554.309.540450|59363e5f178f0b48e5dedc718c7f3b3e'
 }
 
-def create_user(username, email, ende, gid):
+def create_user(username, email, ende, gid):        # Funktion um neue Nutzer zu erstellen.
     group_id = get_gid(gid)
-    payload = json.dumps({
+    payload = json.dumps({                          # JSON mit den Informationen wird erstellt
     "userName": username,
     "email": email,
     "firstName": "Maintenance",
@@ -26,7 +26,7 @@ def create_user(username, email, ende, gid):
           }
         ],
     })
-    print(requests.request("POST", url, headers=headers, data=payload))
-    return requests.request("POST", url="https://admin-api.axissecurity.com/api/v1.0/Commit", headers=headers, data={})
+    print(requests.request("POST", url, headers=headers, data=payload))     # JSON Payload wird gepostet 
+    return requests.request("POST", url="https://admin-api.axissecurity.com/api/v1.0/Commit", headers=headers, data={})  # Commit
 
 

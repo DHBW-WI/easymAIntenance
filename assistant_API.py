@@ -83,7 +83,7 @@ elif st.session_state["authentication_status"]:
 
 
         #######################################
-        # TOOLS AUFRUFE
+        # TOOLS AUFRUFEN
         #######################################
 
     def get_remote_instructions(ip, user, start, ende):         # Funktionsaufuruf um die Berechtigungen in Axis einzurichter (bestehender Nutzer)
@@ -98,10 +98,10 @@ elif st.session_state["authentication_status"]:
         return "Success"
 
     def get_date():         # Funktionsaufruf um das aktuelle Datum und die Zeit für GPT bereitzustellen
-        print(dt.datetime.now())
-        now = dt.datetime.now()
-        return json.dumps(now.isoformat())
-        
+        print((dt.datetime.now()).strftime("%Y-%m-%d %H:%M:%S"))
+        now = (dt.datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
+        return json.dumps(now)
+    
     def check_user(user):       # Funktionsaufruf, um Existenz eines Nutzers zu prüfen
         return check_u(user)
 
@@ -126,15 +126,15 @@ elif st.session_state["authentication_status"]:
     #######################################
 
 
-    def get_assistant_id():
+    def get_assistant_id():                                     # Assistant ID abrufen
         return st.session_state[assistant_state].id
 
 
-    def get_thread_id():
+    def get_thread_id():                                        # Thread ID abrufen
         return st.session_state[thread_state].id
 
 
-    def get_run_id():
+    def get_run_id():                                           # Run ID abrufen
         return st.session_state[last_openai_run_state].id
 
 
@@ -156,7 +156,7 @@ elif st.session_state["authentication_status"]:
 
         completed = False
 
-        # Polling
+        # Antwort generieren
         with status_placeholder.status("Computing Assistant answer") as status_container:
             st.write(f"Launching run {get_run_id()}")
 
@@ -225,19 +225,24 @@ elif st.session_state["authentication_status"]:
     #######################################
 
     st.title("⚙️easy m:red[AI]ntenance")
+    left_col, right_col = st.columns(2)
 
-    with st.container():
-        for role, message in reversed(st.session_state[conversation_state]):
-            with st.chat_message(role):
-                st.write(message)
-    status_placeholder = st.empty()
+    with left_col:                              # Linke Seite mit Chat        
+        with st.container():
+            for role, message in reversed(st.session_state[conversation_state]):
+                with st.chat_message(role):
+                    st.write(message)
+        status_placeholder = st.empty()
 
-
-        
-
-    st.chat_input(
+    st.chat_input(                              # Input Feld definieren
         placeholder="...",
         key=user_msg_input_key,
         on_submit=on_text_input,
         args=(status_placeholder,),
-    )
+        )    
+
+    with right_col:                             # Rechte Seite mit Bild
+        st.image('network.png')
+        
+
+  

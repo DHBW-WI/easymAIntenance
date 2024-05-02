@@ -4,17 +4,17 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from update_user import add_user, revoke_user
 
 
-scheduler = BackgroundScheduler()
+scheduler = BackgroundScheduler()                                                               # Initialisiert einen BackgroundScheduler und startet diesen
 scheduler.start()
 
-def get_j():
+def get_j():                                                                                    # Gibt eine Liste der geplanten Aktionen (hinzufügen/entfernen der Nutzer) zurück
     scheduler.print_jobs()
     return str(scheduler.get_jobs(jobstore=any))
 
 def add(name, ip):
     print(add_user(str(ip), str(name)))
  
-def revoke(name):
+def revoke(name):                                                                               # Ruft revoke_user auf. Der Nutzer wird aus der Berechtigungsgruppe entfernt
     print(revoke_user(str(name)))
     
 def schedule_job(start, end, name, ip):
