@@ -12,7 +12,7 @@ payload = {}
 headers = {
   'Accept': 'application/json',
   'Authorization': st.secrets["AXIS_API_KEY"],
-  'Cookie': 'ax_session=1707811322.554.309.540450|59363e5f178f0b48e5dedc718c7f3b3e'
+  'Cookie': ''
 }
 
 def get_uid(username):                                                                          # Funktion um Nutzer ID von Axis für bestimmten Nutzer abzufragen
