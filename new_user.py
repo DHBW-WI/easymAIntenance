@@ -5,7 +5,7 @@ from get_ids import get_gid
 
 url = "https://admin-api.axissecurity.com/api/v1.0/Users"
 
-headers = {
+headers = {                                         # Header mit den API_Informationen
   'Content-Type': 'application/json',
   'Accept': 'application/json',
   'Authorization': st.secrets["AXIS_API_KEY"],

@@ -1,2 +1,6 @@
 openai
 streamlit
+yaml
+streamlit_authenticator
+apscheduler
+datetime
