@@ -41,5 +41,5 @@ The system can be operated quite intuitively. The chatbot is designed to request
 
 - **Precise communication:** Another aspect is precise communication with the system. It is very important to specify the relevant information precisely. Important: To ensure a smooth process, the exact machine name “maschine1” should be used, taking lower case into account. 						The spelling of the user name should also be exact. However, the system can help with this, as it checks on request whether a user exists in the Axis IdP.
 
-- Answering questions:** In addition, the chatbot's queries should be taken into account and the collected attributes should be checked by the user at the end of the information collection process. The chatbot only assigns rights after the attributes have been checked. 
+- **Answering questions:** In addition, the chatbot's queries should be taken into account and the collected attributes should be checked by the user at the end of the information collection process. The chatbot only assigns rights after the attributes have been checked. 
 
