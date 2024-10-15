@@ -18,7 +18,7 @@ On the other hand, it is necessary to grant access via the Axis interface. To do
 The AXIS API key must also be added to the secrets.toml file. 
 
 
-## Einrichtung in Axis SSE
+## Settings in Axis SSE
 In addition, the machines used in the use case must still be set up within Axis. To do this, a separate user group is created for each machine in the Axis IdP (Settings > Axis IdP > User Groups). 
 
 Further information about the machine can be stored in the group description, which can then be displayed in the chat interface. By adding or removing a user from this user group, a user is finally granted access to the machine. Finally, a rule must be created for this, which grants all users in the group access to the specific application. This can be done in the Policy > Rules area. 
