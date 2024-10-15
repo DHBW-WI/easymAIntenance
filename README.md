@@ -1,48 +1,45 @@
-# easymAIntenence | Fernwartung mit Axis ZTNA
+# easymAIntenence | Remote maintenance with Axis ZTNA
 
-Im vorliegenden Use Case für die Fernwartung soll die Implementierung von Axis Zero Trust Network Access und die Integration eines Chatbots verdeutlichen, wie flexibel Aruba Technologien für verschiedene Anwendungsfälle angepasst werden kann. Dabei wird auch verdeutlicht, wie gut Erweiterungen von Axis SSE über die API-Schnittstelle vorgenommen werden können.
+In this use case for remote maintenance, the implementation of Axis Zero Trust Network Access and the integration of a chatbot are intended to illustrate how flexibly Aruba technologies can be adapted for various use cases. It also illustrates how well extensions to Axis SSE can be made via the API interface.
 
-## Aufbau
+## Interfaces
 
-## Nutzung
-Um auf den Use Case zuzugreifen und diesen zu präsentieren müssen die folgenden Details beachtet werden. Das Herzstück des Use Case ist die Chatbot Oberfläche. Über diese werden die nötigen Informationen abgefragt, um einen Zugriff zu gewähren. Die vom Chatbot abgefragten Informationen umfassen: 
-- Nutzername: Um den Zugriff zu gewähren ist natürlich ein im Axis IdP angelegter Nutzeraccount nötig. Dabei sollte der genaue Nutzername angegeben werden.
--	Maschinenname: Außerdem ist ein „Maschinename“ nötig. Dieser repräsentiert die vorhandenen Maschinen und umfasst im aktuellen Aufbau „maschine1“ und „maschine2“. Für Präsentationen des Use Case sollte maschine1 genutzt werden, da nur hier der Zugriff auf ein reales System vorhanden ist. Bei maschine2 handelt es sich lediglich um einen ‚Dummy‘.
--	Startzeit: Die Startzeit der Wartung muss angegeben werden. Dies kann durch relative („Heute in 10 Minuten“; „In zwei Stunden“), als auch durch absolute Angaben („24.04.2024 um 12 Uhr“) realisiert werden.
--	Endzeit: Auch die Endzeit der Wartung muss angegeben werden. Dies kann durch relative („Heute in 10 Minuten“; „In zwei Stunden“), als auch durch absolute Angaben („24.04.2024 um 12 Uhr“) realisiert werden.
--	(E-Mail Adresse): Falls für eine Wartung ein neuer Account angelegt werden muss, so muss eine gültige E-Mail Adresse angegeben werden. An diese wird der Link zur Passwortvergabe für den Account geschickt. Wichtig: Unter der E-Mail Adresse darf kein anderer User im Axis IdP angelegt sein. 
+### OPENAI 
+The API interface from OpenAI is used to operate easymAIntenance. The core functionality of the assistants is used to create a customizable chatbot. 
+To do this, a new assistant must first be created on the OpenAI API interface (https://platform.openai.com/assistants) and provided with the necessary instructions. The general purpose of the chatbot must first be described in the 'System instructions'. The following instruction was used for easymAIntenance:
 
-## Schnittstellen
+“You are a chatbot that will help a production manager or production employee to plan upcoming remote maintenance for machines and assign the necessary authorizations. You will also use function calling to do this. More specifically, your task is to find out the following information from your conversation partner: User name, machine name, start time and end time of the remote maintenance.  This information must always be obtained from the user. Optionally, an e-mail address may also be required to create a new user account. Before setting up the maintenance, ask the user whether all the information provided is correct and show them the collected attributes for the remote maintenance. Then initiate the necessary function after confirmation. Always use the exact information and pay attention to capitalization.”
 
-### EINSTELLUNGEN OPENAI SCHNITTSTELLE
-Um easymAIntenance betreiben zu können wird die API-Schnittstelle von OpenAI genutzt. Dazu wird im Kern die Funktionalität der Assistants genutzt, um einen individuell anpassbaren Chatbot erzeugen zu können. 
-Dazu muss auf der API-Oberfläche von OpenAI (https://platform.openai.com/assistants) zunächst ein neuer Assistant erzeugt und mit den nötigen Anweisungen ausgestattet werden. So muss in den ‚System instructions‘ zunächst der generelle Zweck des Chatbots beschrieben werden. Für easymAIntenance wurde folgende Instruktion genutzt:
+In addition, some functions must be defined, which can then be called by function calling. The functions to be defined include get_remote_instructions, add_remote_instructions, get_date, check_user and get_machines. The definitions of the individual functions can be found in the appendix. 
+The assistant ID (e.g. asst_JF****************) and the OpenAI API key must then be added to the secrets.toml file. 
 
-„Du bist ein Chatbot, der einem Produktionsleiter oder Produktionsmitarbeiter dabei helfen soll, anstehende Fernwartungen für Maschinen zu planen und die nötigen Berechtigungen zu vergeben. Dazu wirst du auch Functioncalling verwenden. Genauer gesagt ist deine Aufgabe von deinem Gesprächspartner folgende Informationen zu erfahren: Nutzername, Maschinenname, Startzeitpunkt und Endzeitpunkt der Fernwartung.  Diese Informationen müssen in jedem Fall vom Nutzer eingeholt werden. Optional kann auch eine E-Mail-Adresse erforderlich sein, um einen neuen Nutzeraccount zu erstellen. Frage den Nutzer vor Einrichtung der Wartung, ob alle gegebenen Informationen richtig sind und zeige ihm dazu die gesammelten Attribute für die Fernwartung. Stoße dann nach Bestätigung die nötige Funktion an. Nutze immer die exakten Informationen und achte auf Groß/Kleinschreibung.“
-
-Darüber hinaus müssen noch einige Funktionen definiert werden, welche dann durch Function Calling aufgerufen werden können. Die zu definierenden Funktionen umfassen get_remote_instructions, add_remote_instructions, get_date, check_user und get_machines. Die Definitionen der einzelnen Funktionen befinden sich im Anhang. 
-Anschließend müssen die Assistant ID (Bsp. asst_JF****************) und der OpenAI API Key in die secrets.toml Datei hinzugefügt werden. 
-
-### EINSTELLUNGEN AXIS SSE SCHNITTSTELLE
-Auf der anderen Seite ist es nötig einen Zugriff über die Schnittstelle von Axis zu gewähren. Dazu muss auf der Managementoberfläche ein neuer API-Token erstellt werden. Die Möglichkeit dazu kann unter Settings > Admin API gefunden werden. Bei der Erstellung des Tokens ist zu beachten, dass als ‚Token Permission‘ Read and Write Zugriff gewährt wird. Außerdem sollte im Abschnitt ‚Token Scope‘ der Zugriff auf Users und Groups gestattet werden. 
-Auch der AXIS API Key muss anschließend in der secrets.toml Datei eingefügt werden. 
+### AXIS SSE
+On the other hand, it is necessary to grant access via the Axis interface. To do this, a new API token must be created on the management interface. The option to do this can be found under Settings > Admin API. When creating the token, make sure that Read and Write access is granted as 'Token Permission'. In addition, access to users and groups should be permitted in the 'Token Scope' section. 
+The AXIS API key must also be added to the secrets.toml file. 
 
 
 ## Einrichtung in Axis SSE
-Darüber hinaus müssen die im Use Case verwendeten Maschinen noch innerhalb von Axis eingerichtet werden. Dazu wird im Axis IdP eine eigene Nutzergruppe pro Maschine angelegt (Settings > Axis IdP > User Groups). 
+In addition, the machines used in the use case must still be set up within Axis. To do this, a separate user group is created for each machine in the Axis IdP (Settings > Axis IdP > User Groups). 
 
-In der Gruppenbeschreibung können weitere Hinweise zur Maschine hinterlegt werden, welche dann in der Chatoberfläche angezeigt werden können. Durch das Hinzufügen oder Entfernen aus dieser Nutzergruppe erhält ein Nutzer schließlich den Zugriff auf die Maschine. Hierfür muss schließlich noch eine Regel angelegt werden, welche allen Nutzern in der Gruppe den Zugriff auf die konkrete Anwendung gewährt. Dies kann im Bereich Policy > Rules geschehen. 
+Further information about the machine can be stored in the group description, which can then be displayed in the chat interface. By adding or removing a user from this user group, a user is finally granted access to the machine. Finally, a rule must be created for this, which grants all users in the group access to the specific application. This can be done in the Policy > Rules area. 
 
-In Abbildung 3 ist zu sehen, wie die gesamte Nutzergruppe maschine1 Zugriff auf eine Destination erhält. Nachdem ein Nutzer nun zu der Nutzergruppe hinzugefügt wurde, wird die Anwendung in seinem Portal sichtbar und er erhält Zugriff. In der easymAIntenance Oberfläche muss nun der Name der Gruppe angegeben werden, um Zugriff auf die Maschine zu gewähren. 
+
+## Use
+To access and present the use case, the following details must be observed. The heart of the use case is the chatbot interface, which can be started with the following instruction: 
+```python3 -m streamlit run assistant_API.py```
+The information requested by the chatbot includes: 
+- User name: To grant access, a user account created in the Axis IdP is of course required. The exact user name should be specified.
+- Machine name: A “machine name” is also required. This represents the existing machines and includes “maschine1” and “maschine2” in the current structure. 
+- Start time: The start time of the maintenance must be specified. This can be realized by relative (“Today in 10 minutes”; “In two hours”), as well as by absolute specifications (“24.04.2024 at 12 noon”).
+- End time: The end time of the maintenance must also be specified. This can be realized by relative (“Today in 10 minutes”; “In two hours”), as well as by absolute specifications (“24.04.2024 at 12 noon”).
+- (e-mail address): If a new account has to be created for maintenance, a valid e-mail address must be entered. The link to the password assignment for the account will be sent to this address. Important: No other user may be created in the Axis IdP under the e-mail address. 
 
 
 ## Best Practices
-Die Bedienung des Systems kann recht intuitiv stattfinden. Der Chatbot ist darauf ausgelegt alle relevanten Informationen (siehe Abschnitt 4) vom Nutzer abzufragen und letztlich nochmals überprüfen zu lassen. Dennoch sind einige generelle Hinweise bei der Interaktion mit dem Chatbot zu beachten:
--	__Klare Kommunikation:__ Es empfiehlt sich den Dialog mit einer Absichtserklärung zu beginnen. Dies ist nicht zwingend nötig, erleichtert aber den Prozess und lässt den Prototyp noch besser wirken. Eine erste Anfrage im Stil von „Kannst du mir helfen eine Fernwartung einzurichten?“ oder „Ich möchte eine Fernwartung einrichten“ erleichtert den Prozess.
+The system can be operated quite intuitively. The chatbot is designed to request all relevant information (see section 4) from the user and ultimately have it checked again. Nevertheless, there are a few general points to bear in mind when interacting with the chatbot:
+- __Clear communication:__ It is advisable to start the dialog with a declaration of intent. This is not absolutely necessary, but it makes the process easier and makes the prototype look even better. An initial request in the style of “Can you help me set up remote maintenance?” or “I would like to set up remote maintenance” makes the process easier.
 
--	**Präzise Kommunikation:** Ein weiterer Aspekt ist die präzise Kommunikation mit dem System. Sehr wichtig ist dabei die exakte Ausschreibung der relevanten Informationen. Wichtig: Für einen reibungslosen Ablauf sollte der exakte Maschinename „maschine1“ unter Beachtung der Kleinschreibung verwendet werden. 						Auch die Schreibweise de Nutzernamens sollte exakt sein. Dabei kann jedoch, dass System helfen, da diese auf Nachfrage prüft, ob ein Nutzer im Axis IdP existiert.
+- **Precise communication:** Another aspect is precise communication with the system. It is very important to specify the relevant information precisely. Important: To ensure a smooth process, the exact machine name “maschine1” should be used, taking lower case into account. 						The spelling of the user name should also be exact. However, the system can help with this, as it checks on request whether a user exists in the Axis IdP.
 
--	**Fragen beantworten:** Darüber hinaus sollten die Rückfragen des Chatbots beachtet werden und am Ende der Informationssammlung eine Überprüfung der gesammelten Attribute durch den Nutzer stattfinden. Der Chatbot führt die Rechtevergabe erst nach einer Überprüfung der Attribute aus. 
-
-Wenn die aufgelisteten Hinweise beachtet werden, kann mit hoher Wahrscheinlichkeit ein reibungsloser Ablauf der Use Case Präsentation garantiert werden. Nichtsdestotrotz muss beachtet werden, dass durch die Komponente des Chatbots immer ein gewisses Restrisiko für einen Fehler im Ablauf besteht. Dieses geringe Risiko kann nicht vollständig aus dem System entfernt werden.
+- Answering questions:** In addition, the chatbot's queries should be taken into account and the collected attributes should be checked by the user at the end of the information collection process. The chatbot only assigns rights after the attributes have been checked. 
 
