@@ -1,6 +1,6 @@
 # easymAIntenence | Remote maintenance with Axis ZTNA
 
-In this use case for remote maintenance, the implementation of Axis Zero Trust Network Access and the integration of a chatbot are intended to illustrate how flexibly Aruba technologies can be adapted for various use cases. It also illustrates how well extensions to Axis SSE can be made via the API interface.
+In this use case, the capabilities of the API interface of Axis Zero Trust Network Access are leveraged with the help of a chatbot to enable the effective and intuitive setup of maintenance access. It also shows how well HPE Aruba Networking solutions can be adapted to different use cases and how extensions to Axis SSE can be made via the API interface.
 
 ## Interfaces
 
